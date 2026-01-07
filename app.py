@@ -155,3 +155,50 @@ with tab4:
             "[Click here to submit feedback](https://docs.google.com/forms/d/e/1FAIpQLSesG3CtkAOL2EZVMS5U4DUtunCo9Q4p6l9WbSqSOuoezp-b7Q/viewform)",
             unsafe_allow_html=True
         )
+
+# -------------------- Tab 5: PDF Study + Notes --------------------
+tab5 = st.tabs([])  # temporary placeholder to avoid overwriting
+
+with st.tab("📄 PDF Study"):
+    st.subheader("📄 PDF Viewer + Notes")
+    
+    uploaded_pdf = st.file_uploader("Upload PDF", type="pdf", key="pdf_uploader")
+    
+    if uploaded_pdf:
+        import base64
+        pdf_bytes = uploaded_pdf.read()
+        b64 = base64.b64encode(pdf_bytes).decode()
+
+        # Layout: PDF left, Notes right
+        col_pdf, col_notes = st.columns([3, 2])
+        
+        with col_pdf:
+            pdf_display = f'''
+            <iframe src="data:application/pdf;base64,{b64}" width="100%" height="800"></iframe>
+            '''
+            st.markdown(pdf_display, unsafe_allow_html=True)
+        
+        with col_notes:
+            st.subheader("📝 Take Notes")
+            if "pdf_notes" not in st.session_state:
+                st.session_state.pdf_notes = ""
+            st.session_state.pdf_notes = st.text_area(
+                "Write your notes here",
+                value=st.session_state.pdf_notes,
+                height=800,
+                placeholder="Write your notes while viewing the PDF..."
+            )
+            words = len(st.session_state.pdf_notes.split())
+            chars = len(st.session_state.pdf_notes)
+            w1, w2 = st.columns(2)
+            w1.metric("Words", words)
+            w2.metric("Characters", chars)
+            st.download_button(
+                "⬇ Download Notes (TXT)",
+                st.session_state.pdf_notes,
+                "pdf_notes.txt",
+                mime="text/plain"
+            )
+    else:
+        st.info("Upload a PDF to start taking notes.")
+# -------------------- Tab 5: PDF Study + Notes --------------------
