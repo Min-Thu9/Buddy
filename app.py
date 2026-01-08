@@ -4,6 +4,7 @@ import base64
 
 st.set_page_config(page_title="StudyBuddy", layout="wide")
 st.title("📚 StudyBuddy")
+st.info("Recommended Browser: Firefox.")
 
 # -------------------- Session State Initialization --------------------
 if "video_notes" not in st.session_state:
